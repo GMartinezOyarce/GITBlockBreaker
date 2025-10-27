@@ -10,30 +10,55 @@ public class Paddle {
     private int y = 20;
     private int width = 100;
     private int height = 10;
+    private float velocidad;
+    
+    private int originalWitdh;
+    private float originalVelocidad;
+    
     
     public Paddle(int x, int y, int ancho, int alto) {
     	this.x = x;
     	this.y= y;
     	width = ancho;
     	height = alto;
+    	
+    	this.velocidad = 10.0f;
+    	this.originalWitdh = ancho;
+    	this.originalVelocidad = this.velocidad;
     }
      
     public int getX() {return x;}
 	public int getY() {return y;}
 	public int getWidth() {return width;}
 	public int getHeight() {return height;}
+	
 
-	public void draw(ShapeRenderer shape){
+	public void draw(ShapeRenderer shape){    	
         shape.setColor(Color.BLUE);
-        int x2 = x; //= Gdx.input.getX();
-        if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) x2 =x-8;
-        if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) x2=x+8; 
-       // y = Gdx.graphics.getHeight() - Gdx.input.getY(); 
-        if (x2 > 0 && x2+width < Gdx.graphics.getWidth()) {
-            x = x2;
-        }
         shape.rect(x, y, width, height);
     }
+	
+	public void moveLeft() {
+		x -=velocidad;
+		if(x < 0) x = 0;
+	}
+	public void moveRight() {
+		x+= velocidad;
+		if(x + this.width >Gdx.graphics.getWidth()) {
+			x = Gdx.graphics.getWidth() - width;
+		}
+	}
     
+	public void reset() {
+		this.velocidad = this.originalVelocidad;
+		this.width = this.originalWitdh;
+	}
+	
+    public void agrandar(float factor) {
+    	this.width = (int)(this.width * factor);
+    }
     
+    public void aumentarVelocidad(float factor) {
+    	this.velocidad *= factor; 
+    }
 }
