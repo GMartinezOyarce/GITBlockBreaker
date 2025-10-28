@@ -24,6 +24,10 @@ public class PingBall {
 	        estaQuieto = iniciaQuieto;
 	    }
 	    
+	    public int getSize() {
+	    	return this.size;
+	    }
+	    
 	    public boolean estaQuieto() {
 	    	return estaQuieto;
 	    }
@@ -53,27 +57,34 @@ public class PingBall {
 	        }
 	    }
 	    
-	    public void checkCollision(Paddle paddle) {
-	        if(collidesWith(paddle)){
-	            color = Color.GREEN;
-	            ySpeed = -ySpeed;
-	        }
-	        else{
-	            color = Color.WHITE;
-	        }
-	    }
-	    private boolean collidesWith(Paddle pp) {
-
-	    	boolean intersectaX = (pp.getX() + pp.getWidth() >= x-size) && (pp.getX() <= x+size);
-	        boolean intersectaY = (pp.getY() + pp.getHeight() >= y-size) && (pp.getY() <= y+size);		
-	    	return intersectaX && intersectaY;
-	    }
 	    
-	    public void checkCollision(Block block) {
+	    public void checkCollision(Paddle paddle) {
+	    	int cercanoX = Math.max(paddle.getX(),Math.min(this.x, paddle.getX() + paddle.getWidth()));
+	    	int cercanoY = Math.max(paddle.getY(), Math.min(this.y, paddle.getY() + paddle.getHeight()));
+	    
+	    	int distanciaX = this.x - cercanoX;
+	    	int distanciaY = this.y - cercanoY;
+	    
+	    	int distancia = (distanciaX * distanciaX) + (distanciaY * distanciaY);
+	    
+	    	if(distancia < this.size * this.size) {
+	    		y = paddle.getY() + paddle.getHeight() + size + 1;
+	    		if(paddle.esPegajoso()) {
+	    			setEstaQuieto(true);
+	    		}
+	    		else {
+	    			this.ySpeed = Math.abs(ySpeed);
+	        
+	    		}
+	    	}
+	    }
+	    public boolean checkCollision(Block block) {
 	        if(collidesWith(block)){
 	            ySpeed = - ySpeed;
 	            block.destroyed = true;
+	            return true;
 	        }
+	        return false;
 	    }
 	    private boolean collidesWith(Block bb) {
 
@@ -81,5 +92,10 @@ public class PingBall {
 	        boolean intersectaY = (bb.y + bb.height >= y-size) && (bb.y <= y+size);		
 	    	return intersectaX && intersectaY;
 	    }
+	    public void forzarVelocidadArriba() {
+	    	this.ySpeed = Math.abs(ySpeed);
+	    			
+	    }
+
 	    
 	}
