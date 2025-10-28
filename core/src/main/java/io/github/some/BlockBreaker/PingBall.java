@@ -1,46 +1,21 @@
 package io.github.some.BlockBreaker;
 
-
-
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 
-public class PingBall {
-	    private int x;
-	    private int y;
-	    private int size;
-	    private int xSpeed;
-	    private int ySpeed;
-	    private Color color = Color.WHITE;
-	    private boolean estaQuieto;
-	    
-	    public PingBall(int x, int y, int size, int xSpeed, int ySpeed, boolean iniciaQuieto) {
-	        this.x = x;
-	        this.y = y;
-	        this.size = size;
-	        this.xSpeed = xSpeed;
-	        this.ySpeed = ySpeed;
-	        estaQuieto = iniciaQuieto;
-	    }
-	    
-	    public boolean estaQuieto() {
-	    	return estaQuieto;
-	    }
-	    public void setEstaQuieto(boolean bb) {
-	    	estaQuieto=bb;
-	    }
-	    public void setXY(int x, int y) {
-	    	this.x = x;
-	        this.y = y;
-	    }
-	    public int getY() {return y;}
-	    
+public class PingBall extends Proyectil{
+		
+		public PingBall(int x, int y, int size, int xSpeed, int ySpeed, boolean iniciaQuieto) {
+			super(x, y, size, xSpeed, ySpeed, iniciaQuieto);
+			this.color = Color.WHITE;
+		}
+		@Override
 	    public void draw(ShapeRenderer shape){
 	        shape.setColor(color);
 	        shape.circle(x, y, size);
 	    }
-	    
+	    @Override
 	    public void update() {
 	    	if (estaQuieto) return;
 	        x += xSpeed;
@@ -52,7 +27,6 @@ public class PingBall {
 	            ySpeed = -ySpeed;
 	        }
 	    }
-	    
 	    public void checkCollision(Paddle paddle) {
 	        if(collidesWith(paddle)){
 	            color = Color.GREEN;
@@ -68,7 +42,6 @@ public class PingBall {
 	        boolean intersectaY = (pp.getY() + pp.getHeight() >= y-size) && (pp.getY() <= y+size);		
 	    	return intersectaX && intersectaY;
 	    }
-	    
 	    public void checkCollision(Block block) {
 	        if(collidesWith(block)){
 	            ySpeed = - ySpeed;
