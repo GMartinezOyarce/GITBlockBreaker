@@ -13,6 +13,7 @@ import com.badlogic.gdx.utils.ScreenUtils;
 
 import Habilidades.AgrandarPaddle;
 import Habilidades.Habilidad;
+import Habilidades.PaddlePegajoso;
 import Habilidades.VelocidadPaddle;
 import Habilidades.VidaExtra;
 
@@ -96,6 +97,7 @@ public class BlockBreakerGame extends ApplicationAdapter {
         poolDeHabilidades.add(new VidaExtra());
         poolDeHabilidades.add(new AgrandarPaddle());
         poolDeHabilidades.add(new VelocidadPaddle());
+        poolDeHabilidades.add(new PaddlePegajoso());
         // ¡Puedes seguir añadiendo más habilidades aquí!
 
         // --- Estado Inicial ---
@@ -177,6 +179,7 @@ public class BlockBreakerGame extends ApplicationAdapter {
         // Si la bola está quieta y el jugador presiona ESPACIO, la lanza
         if (ball.estaQuieto() && Gdx.input.isKeyPressed(Input.Keys.SPACE)) {
             ball.setEstaQuieto(false);
+            ball.forzarVelocidadArriba();
         }
         
         // Si la bola está quieta, sigue al paddle
@@ -230,13 +233,13 @@ public class BlockBreakerGame extends ApplicationAdapter {
         blocks.clear();
         int blockWidth = 70;
         int blockHeight = 25;
-        int filas = 2 + nivelActual; // El nivel añade más filas
-        int columnas = 10;
+        int filas = 1 + nivelActual; // El nivel añade más filas
+        int columnas = 9;
         
         for (int y = 0; y < filas; y++) {
             for (int x = 0; x < columnas; x++) {
                 blocks.add(new Block(
-                    x * (blockWidth + 10) + 35, // Posición X
+                    x * (blockWidth + 10) + 30, // Posición X
                     Gdx.graphics.getHeight() - (y * (blockHeight + 10)) - 50, // Posición Y
                     blockWidth,
                     blockHeight
