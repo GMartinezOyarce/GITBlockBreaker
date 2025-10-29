@@ -9,7 +9,7 @@ public class Block {
     private int x,y,width,height;
     private Color cc;
     private boolean destroyed;
-    private BlockType type;// tipo de bloque (NORMAL, FUERTE, DURO, DURISIMO)
+    private BlockType type;// tipo de bloque (NORMAL, FUERTE, DURO, DURISIMO, HIELO)
     private int hp; //vidas o golpes restantes
     private int maxHp; //guarda cuantas vidas tenía al principio 
     private int points; //puntos que da cuando se destruye
@@ -41,6 +41,10 @@ public class Block {
                 maxHp = hp = 4;
                 points = 200;
                 break;
+            case HIELO:
+                maxHp = hp = 2;
+                points = 120;
+                break;
         }
 
         //color según el tipo
@@ -56,6 +60,9 @@ public class Block {
                 break;
             case DURISIMO:
                 cc = new Color(1f, 0.2f, 0.2f, 1f);// rojo
+                break;
+            case HIELO:
+                cc = new Color(0.75f, 0.9f, 1.0f, 1f);// celeste hielo
                 break;
         }
     }
@@ -83,6 +90,9 @@ public class Block {
     }
     public int getPoints() {
         return points;
+    }
+    public BlockType getType(){
+        return type;
     }
 
     //dibujar rectangulo (bloque)
@@ -129,6 +139,7 @@ public class Block {
         NORMAL,//1 golpe
         FUERTE,//2 golpes
         DURO, //3 golpes
-        DURISIMO //4 golpes
+        DURISIMO, //4 golpes
+        HIELO //2 golpes y aplica lentitud
     }
 }

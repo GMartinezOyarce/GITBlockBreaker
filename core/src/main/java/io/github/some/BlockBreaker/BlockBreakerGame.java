@@ -10,6 +10,7 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import java.util.concurrent.ThreadLocalRandom;
 
 
 public class BlockBreakerGame extends ApplicationAdapter {
@@ -48,9 +49,21 @@ public class BlockBreakerGame extends ApplicationAdapter {
 		    for (int cont = 0; cont<filas; cont++ ) {
 		    	y -= blockHeight+10;
 		    	for (int x = 5; x < Gdx.graphics.getWidth(); x += blockWidth + 10) {
-		            blocks.add(new Block(x, y, blockWidth, blockHeight));
+		    		Block.BlockType tipo = getRandomBlockType();
+		            blocks.add(new Block(x, y, blockWidth, blockHeight, tipo));
 		        }
 		    }
+		}
+
+		// selecciona tipo aleatorio con probabilidades ponderadas
+		private Block.BlockType getRandomBlockType() {
+			// Probabilidades: NORMAL 0.45, FUERTE 0.20, DURO 0.15, DURISIMO 0.10, HIELO 0.10
+			double r = ThreadLocalRandom.current().nextDouble();
+			if (r < 0.45) return Block.BlockType.NORMAL;
+			if (r < 0.65) return Block.BlockType.FUERTE;
+			if (r < 0.80) return Block.BlockType.DURO;
+			if (r < 0.90) return Block.BlockType.DURISIMO;
+			return Block.BlockType.HIELO;
 		}
 		public void dibujaTextos() {
 			//actualizar matrices de la cámara
@@ -104,8 +117,12 @@ public class BlockBreakerGame extends ApplicationAdapter {
 	        // actualizar estado de los bloques 
 	        for (int i = 0; i < blocks.size(); i++) {
 	            Block b = blocks.get(i);
-	            if (b.destroyed) {
-	            	puntaje++;
+            if (b.isDestroyed()) {
+	            	// aplicar efecto si el bloque era de hielo
+	            	if (b.getType() == Block.BlockType.HIELO) {
+	            		pad.applySlow(2f);
+	            	}
+	            	puntaje += b.getPoints();
 	                blocks.remove(b);
 	                i--; //para no saltarse 1 tras eliminar del arraylist
 	            }
