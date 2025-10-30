@@ -6,5 +6,4 @@ public interface Habilidad {
 	void aplicar(BlockBreakerGame game);
 	
 	String getNombre();
-
 }

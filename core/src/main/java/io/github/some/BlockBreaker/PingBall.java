@@ -38,6 +38,9 @@ public class PingBall {
 	    	this.x = x;
 	        this.y = y;
 	    }
+	    public void setY(int y) {
+	    	this.y = y;
+	    }
 	    public int getY() {return y;}
 	    
 	    public void draw(ShapeRenderer shape){
