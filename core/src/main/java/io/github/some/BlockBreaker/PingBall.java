@@ -55,9 +55,9 @@ public class PingBall {
 	    x += xSpeed;
 	    y += ySpeed;
         
-        // Límites del mundo (de 'main')
-        int anchoMundo = 800;
-        int techoMundo = 465; // Ajustado para estar sobre los bloques y bajo la UI
+	    // Límites del mundo (de 'main')
+	    int anchoMundo = 800;
+	    int techoMundo = 465; // Ajustado para estar sobre los bloques y bajo la UI
 
 	    if (x-size < 0 || x+size > anchoMundo) { // Usa anchoMundo
 	        xSpeed = -xSpeed;
@@ -80,7 +80,8 @@ public class PingBall {
 		int distanciaX = this.x - cercanoX;
 		int distanciaY = this.y - cercanoY;
     
-		int distancia = (distanciaX * distanciaX) + (distanciaY * distanciaY); 
+        // ¡Corregido con '*' en lugar de '+'!
+		int distancia = (distanciaX * distanciaX) + (distanciaY * distanciaY);	
 	
 		if(distancia < this.size * this.size) {
 			y = paddle.getY() + paddle.getHeight() + size + 1;
@@ -93,37 +94,33 @@ public class PingBall {
 		}
 	}
     
-    // --- Lógica de Bloques (de 'feature/blocks-antonia') ---
-    // ¡Estos dos métodos reemplazan tu lógica de bloques anterior!
+	// --- Lógica de Bloques (MERGEADA) ---
     
-    /**
-     * Colisión con Bloque (de 'feature/blocks-antonia')
-     * Llama a .hit() en el bloque, permitiendo que el bloque
-     * maneje su propia lógica (ej. resistir varios golpes).
-     */
-    public boolean checkCollision(Block block) { // Devuelve boolean como en tu rama
-        if(collidesWith(block)){ // Llama al 'collidesWith' de abajo
-            ySpeed = - ySpeed;
-            block.hit(); // ¡Esta es la nueva lógica!
-            return true;
-        }
-        return false;
-    }
-    
-    /**
-     * Detección de Colisión AABB (de 'feature/blocks-antonia')
-     * (Seguimos usando la lógica AABB para bloques por simplicidad)
-     */
-    private boolean collidesWith(Block bb) {
-        // (Usa los getters del bloque)
-        boolean intersectaX = (bb.getX() + bb.getWidth() >= x-size) && (bb.getX() <= x+size);
-        boolean intersectaY = (bb.getY() + bb.getHeight() >= y-size) && (bb.getY() <= y+size);		
-        return intersectaX && intersectaY;
-    }
+	/**
+	 * Colisión con Bloque (de 'main', que llama a block.hit())
+	 */
+	public boolean checkCollision(Block block) { // Devuelve boolean como en tu rama
+	    if(collidesWith(block)){ // Llama al 'collidesWith' de abajo
+	        ySpeed = - ySpeed;
+	        block.hit(); // ¡Esta es la nueva lógica!
+	        return true;
+	    }
+	    return false;
+	}
+	
+	/**
+	 * Detección de Colisión AABB (de 'main'/'feature')
+	 */
+	private boolean collidesWith(Block bb) {
+	    // (Usa los getters del bloque)
+	    boolean intersectaX = (bb.getX() + bb.getWidth() >= x-size) && (bb.getX() <= x+size);
+	    boolean intersectaY = (bb.getY() + bb.getHeight() >= y-size) && (bb.getY() <= y+size);		
+	    return intersectaX && intersectaY;
+	}
 
-    /**
-     * Forzar velocidad (de tu rama 'main')
-     */
+	/**
+	 * Forzar velocidad (de tu rama 'main')
+	 */
 	public void forzarVelocidadArriba() {
 		this.ySpeed = Math.abs(ySpeed);
         if (this.ySpeed == 0) {
