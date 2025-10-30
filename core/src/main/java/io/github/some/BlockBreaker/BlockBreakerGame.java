@@ -4,6 +4,7 @@ package io.github.some.BlockBreaker;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -12,6 +13,7 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.utils.ScreenUtils;
 
 import Habilidades.AgrandarPaddle;
+import Habilidades.Escudo;
 import Habilidades.Habilidad;
 import Habilidades.PaddlePegajoso;
 import Habilidades.VelocidadPaddle;
@@ -64,11 +66,9 @@ public class BlockBreakerGame extends ApplicationAdapter {
     private Habilidad opcion2;
     private Habilidad opcion3;
 
-    
-    /**
-     * Método de CREACIÓN. Se llama UNA VEZ al iniciar el juego.
-     * Aquí se inicializan todos los objetos.
-     */
+    // Variables para habilidades
+    private boolean escudoActivo = false;
+    private int yEscudo = 5; //posicion de escudo en pantalla
     @Override
     public void create() {
         // --- Inicializar LibGDX ---
@@ -98,6 +98,7 @@ public class BlockBreakerGame extends ApplicationAdapter {
         poolDeHabilidades.add(new AgrandarPaddle());
         poolDeHabilidades.add(new VelocidadPaddle());
         poolDeHabilidades.add(new PaddlePegajoso());
+        poolDeHabilidades.add(new Escudo());
         // ¡Puedes seguir añadiendo más habilidades aquí!
 
         // --- Estado Inicial ---
@@ -139,6 +140,11 @@ public class BlockBreakerGame extends ApplicationAdapter {
         // Dibuja todos los bloques
         for (Block block : blocks) {
             block.draw(shape);
+        }
+        
+        if(this.escudoActivo) {
+        	shape.setColor(Color.CYAN);
+        	shape.rect(0, yEscudo, Gdx.graphics.getWidth(), 5);
         }
         
         shape.end();
@@ -213,14 +219,22 @@ public class BlockBreakerGame extends ApplicationAdapter {
         
         // --- 5. Comprobar Muerte ---
         if (ball.getY() < 0) {
-            vidas--;
-            if (vidas <= 0) {
-                // Game Over (Implementar esta lógica, ej. reiniciar el juego)
-                reiniciarJuego(); 
-            } else {
-                // Pierde una vida, resetea la bola
-                ball.setEstaQuieto(true);
-            }
+        	
+        	if(this.escudoActivo) {
+        		ball.setY(yEscudo + ball.getSize() + 5);
+        		ball.forzarVelocidadArriba();
+        		escudoActivo = false;
+        	}
+        	else {
+        		vidas--;
+                if (vidas <= 0) {
+                    // Game Over (Implementar esta lógica, ej. reiniciar el juego)
+                    reiniciarJuego(); 
+                } else {
+                    // Pierde una vida, resetea la bola
+                    ball.setEstaQuieto(true);
+                }
+        	}
         }
         
     }
@@ -233,8 +247,8 @@ public class BlockBreakerGame extends ApplicationAdapter {
         blocks.clear();
         int blockWidth = 70;
         int blockHeight = 25;
-        int filas = 1 + nivelActual; // El nivel añade más filas
-        int columnas = 9;
+        int filas = 1; // El nivel añade más filas
+        int columnas = 1;
         
         for (int y = 0; y < filas; y++) {
             for (int x = 0; x < columnas; x++) {
@@ -330,13 +344,16 @@ public class BlockBreakerGame extends ApplicationAdapter {
         vidas = 3;
         puntaje = 0;
         nivel = 1;
-        
+        	
         // Limpia los bloques viejos y crea el nivel 1
         blocks.clear();
         crearBloques(nivel);
         
         // Resetea el tamaño y velocidad del paddle (si los cambiaste)
         pad.reset(); // (Necesitarías añadir este método a Paddle)
+        
+        //resetea el escudo y lo pone en false
+        escudoActivo = false;
         
         // Resetea la bola
         ball.setEstaQuieto(true);
@@ -371,4 +388,9 @@ public class BlockBreakerGame extends ApplicationAdapter {
     public PingBall getBall() {
         return this.ball;
     }
+    
+    public void activarEscudo() {
+    	this.escudoActivo = true;
+    }
+    
 }
