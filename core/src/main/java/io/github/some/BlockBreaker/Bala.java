@@ -32,13 +32,13 @@ public class Bala extends Proyectil{
     }
     public void checkCollision(Block block) {
         if(collidesWith(block)){
-            block.destroyed = true;
+            block.hit();
             activo=false;
         }
     }
     protected boolean collidesWith(Block bb) {
-    	boolean intersectaX = (bb.x + bb.width >= x-size) && (bb.x <= x+size);
-        boolean intersectaY = (bb.y + bb.height >= y-size) && (bb.y <= y+size);		
+    	boolean intersectaX = (bb.getX() + bb.getWidth() >= x-size) && (bb.getX() <= x+size);
+        boolean intersectaY = (bb.getY() + bb.getHeight() >= y-size) && (bb.getY() <= y+size);		
     	return intersectaX && intersectaY;
     }
 }

@@ -40,10 +40,15 @@ public class PingBall {
 		this.y = y;
 	}
 	public int getY() {return y;}
+	public int getX() {return x;}
 	
 	public void draw(ShapeRenderer shape){
 	    shape.setColor(color);
 	    shape.circle(x, y, size);
+	}
+	
+	public void setSize(int tamano) {
+		this.size = tamano;
 	}
 	
     /**

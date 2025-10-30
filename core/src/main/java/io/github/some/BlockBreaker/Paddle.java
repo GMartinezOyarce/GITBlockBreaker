@@ -64,9 +64,8 @@ public class Paddle {
         shape.setColor(velocidad < originalVelocidad ? new Color(0.6f, 0.8f, 1f, 1f) : Color.BLUE);
         
         // Lógica de dibujado de 'main'
-        shape.rect(x, y, width, height);
-    }
-	
+        shape.rect(x, y, width, height);
+		}
     // --- Lógica de Movimiento (de tu rama 'main') ---
     // (Esta es llamada por BlockBreakerGame)
 	public void moveLeft() {

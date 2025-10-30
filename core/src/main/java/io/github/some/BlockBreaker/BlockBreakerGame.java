@@ -226,7 +226,7 @@ public class BlockBreakerGame extends ApplicationAdapter {
             } else {
                 // Pierde una vida, resetea la bola
                 balls.add(new PingBall(pad.getX() + pad.getWidth() / 2, pad.getY() + pad.getHeight() + 5, 5, 5, 5, true));
-                ball.setEstaQuieto(true); // de 'main'
+                balls.get(0).setEstaQuieto(true); // de 'main'
             }
         }
 
