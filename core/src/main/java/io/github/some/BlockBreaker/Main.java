@@ -12,6 +12,7 @@ public class Main extends ApplicationAdapter {
     private SpriteBatch batch;
     private Texture image;
 
+    
     @Override
     public void create() {
         batch = new SpriteBatch();
