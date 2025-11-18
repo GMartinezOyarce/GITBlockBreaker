@@ -4,6 +4,7 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import java.util.Random;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Rectangle;
+import io.github.some.BlockBreaker.GameSession;
 
 public class Block {
     private int x,y,width,height;
@@ -116,6 +117,7 @@ public class Block {
 
         if (hp <= 0) {
             destroyed = true;
+            GameSession.getInstance().addScore(points);// sumamos los puntos de este bloque al puntaje total de la partida
             return true; //se rompió
         }
         return false; //sigue vivo (solo se dañó)
