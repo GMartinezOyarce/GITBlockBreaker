@@ -12,6 +12,12 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.utils.ScreenUtils;
 
+<<<<<<< Updated upstream
+=======
+import GeneracionNiveles.LevelGenerator;
+import GeneracionNiveles.LevelSelectionStrategy;
+// --- Imports de Habilidades (de 'main') ---
+>>>>>>> Stashed changes
 import Habilidades.AgrandarPaddle;
 import Habilidades.Escudo;
 import Habilidades.Habilidad;
@@ -60,11 +66,23 @@ public class BlockBreakerGame extends ApplicationAdapter {
     // --- 5. SISTEMA DE HABILIDADES (SOLID) ---
     // La lista (pool) de todas las habilidades posibles
     private ArrayList<Habilidad> poolDeHabilidades;
+<<<<<<< Updated upstream
     
     // Las 3 habilidades que se ofrecen al jugador
     private Habilidad opcion1;
     private Habilidad opcion2;
     private Habilidad opcion3;
+=======
+    private Habilidad opcion1, opcion2, opcion3;
+    private boolean escudoActivo = false;
+    private int yEscudo = 5;
+    private Habilidad habilidadEscudo;
+    private Habilidad habilidadPaddlePegajoso;
+    
+    // ---- 6. GENERACION DE NIVELES
+    
+    private LevelSelectionStrategy generationStrategy = new LevelSelectionStrategy();
+>>>>>>> Stashed changes
 
     // Variables para habilidades
     private boolean escudoActivo = false;
@@ -73,7 +91,11 @@ public class BlockBreakerGame extends ApplicationAdapter {
     public void create() {
         // --- Inicializar LibGDX ---
         camera = new OrthographicCamera();
+<<<<<<< Updated upstream
         camera.setToOrtho(false, 800, 480); // Tamaño de la ventana
+=======
+        camera.setToOrtho(false, 1200, 800); // Usamos 800x480 de 'main'
+>>>>>>> Stashed changes
         batch = new SpriteBatch();
         font = new BitmapFont();
         font.getData().setScale(1.5f); // Tamaño de la fuente
@@ -90,6 +112,7 @@ public class BlockBreakerGame extends ApplicationAdapter {
         vidas = 3;
         puntaje = 0;
         nivel = 1;
+       
 
         // --- Inicializar Sistema de Habilidades ---
         poolDeHabilidades = new ArrayList<>();
@@ -104,9 +127,14 @@ public class BlockBreakerGame extends ApplicationAdapter {
         // --- Estado Inicial ---
         estadoActual = EstadoJuego.JUGANDO;
         
+<<<<<<< Updated upstream
         // Carga los bloques del primer nivel
+=======
+        // Carga los bloques (usando la lógica de 'main' que era más avanzada)
+>>>>>>> Stashed changes
         crearBloques(nivel);
     }
+    
 
     /**
      * Método RENDER. Se llama 60 veces por segundo (Game Loop).
@@ -148,14 +176,20 @@ public class BlockBreakerGame extends ApplicationAdapter {
         }
         
         shape.end();
+        
 
         // --- Dibujado con SpriteBatch (Textos) ---
         batch.setProjectionMatrix(camera.combined);
         batch.begin();
         
+<<<<<<< Updated upstream
         // Dibuja la UI básica (vidas, puntaje)
         font.draw(batch, "Vidas: " + vidas, 10, 470);
         font.draw(batch, "Puntaje: " + puntaje, Gdx.graphics.getWidth() - 150, 470);
+=======
+        font.draw(batch, "Vidas: " + vidas, 10, Gdx.graphics.getHeight() - 10);
+        font.draw(batch, "Puntaje: " + puntaje, Gdx.graphics.getWidth() - 150, Gdx.graphics.getHeight() - 10);
+>>>>>>> Stashed changes
 
         // Si estamos en el menú, dibuja el menú de habilidades ENCIMA de todo
         if (estadoActual == EstadoJuego.SELECCIONANDO_HABILIDAD) {
@@ -179,6 +213,7 @@ public class BlockBreakerGame extends ApplicationAdapter {
         if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
             pad.moveRight(); // Asumiendo que añades este método a Paddle
         }
+<<<<<<< Updated upstream
         // (Asegúrate de añadir los límites de pantalla en moveLeft/Right de Paddle)
 
         // --- 2. Iniciar la bola ---
@@ -186,6 +221,34 @@ public class BlockBreakerGame extends ApplicationAdapter {
         if (ball.estaQuieto() && Gdx.input.isKeyPressed(Input.Keys.SPACE)) {
             ball.setEstaQuieto(false);
             ball.forzarVelocidadArriba();
+=======
+        
+        PingBall bola = balls.get(0); 
+
+        // 2. Comprobar si está quieta (listo para lanzar) Y si se presiona ESPACIO
+        if (bola.estaQuieto() && Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) { 
+         
+        	// 3. Iniciar el movimiento
+        	bola.setEstaQuieto(false); 
+         
+        	// 4. Darle velocidad (hacia arriba)
+        	bola.forzarVelocidadArriba(); 
+        }
+        
+        
+        pad.update(Gdx.graphics.getDeltaTime()); // Para el efecto hielo
+        for (PingBall ball : balls) {
+            if (ball.estaQuieto()) {
+                ball.setXY(pad.getX() + pad.getWidth() / 2, pad.getY() + pad.getHeight() + ball.getSize() + 1);
+                if (Gdx.input.isKeyPressed(Input.Keys.SPACE)) {
+                    ball.setEstaQuieto(false);
+                    ball.forzarVelocidadArriba();
+                }
+            } else {
+                ball.update();
+                ball.checkCollision(pad); // Revisa colisión con paddle
+            }
+>>>>>>> Stashed changes
         }
         
         // Si la bola está quieta, sigue al paddle
@@ -201,6 +264,7 @@ public class BlockBreakerGame extends ApplicationAdapter {
         // Colisión Bola <-> Paddle
         ball.checkCollision(pad);
 
+<<<<<<< Updated upstream
         // Colisión Bola <-> Bloques
         for (int i = 0; i < blocks.size(); i++) {
             Block block = blocks.get(i);
@@ -208,6 +272,47 @@ public class BlockBreakerGame extends ApplicationAdapter {
                 puntaje += 1; // Gana puntos
                 blocks.remove(i); // Destruye el bloque
                 i--; // Ajusta el índice del bucle
+=======
+      
+        // --- Lógica de Muerte/Game Over (de 'CP' y 'main' combinadas) ---
+        if(balls.isEmpty()) {
+            items.clear(); // de CP
+            balas.clear(); // de CP
+            Timer.instance().clear(); // de CP
+            vidas--; // de 'main'
+            
+            if (vidas <= 0) {
+                reiniciarJuego(); // de 'main'
+            } else {
+                // Pierde una vida, resetea la bola
+                balls.add(new PingBall(pad.getX() + pad.getWidth() / 2, pad.getY() + pad.getHeight() + 5, 5, 5, 5, true));
+                balls.get(0).setEstaQuieto(true); // de 'main'
+            }
+        }
+        
+
+        // --- Lógica de Balas (de 'CP') ---
+        for (int i = 0; i < balas.size(); i++) {
+            Bala b = balas.get(i);
+            b.update();
+            
+            if(!b.getActivo()) {
+                balas.remove(i);
+                i--;
+                continue;
+            }
+            
+            for(Block block : blocks) { 
+                b.checkCollision(block);
+            }
+        }
+
+        // --- Lógica de Colisión de Bloques (MERGEADA) ---
+        // 1. Bolas y Balas "avisan" a los bloques
+        for (Block b : blocks) {
+            for(PingBall ball : balls) { // Bucle de 'CP'
+                ball.checkCollision(b); 
+>>>>>>> Stashed changes
             }
         }
         
@@ -239,6 +344,7 @@ public class BlockBreakerGame extends ApplicationAdapter {
         
     }
 
+<<<<<<< Updated upstream
     /**
      * Dibuja los bloques en pantalla.
      * (Esta es la lógica que ya tenías en tu .class)
@@ -265,6 +371,46 @@ public class BlockBreakerGame extends ApplicationAdapter {
     // --- ============================================ ---
     // --- MÉTODOS DEL SISTEMA DE HABILIDADES (SOLID) ---
     // --- ============================================ ---
+=======
+    
+    // --- ======================================================= ---
+    // --- MÉTODOS DE LÓGICA DE BLOQUES (de 'main'/'feature') ---
+    // --- ======================================================= ---
+    
+    /*public void crearBloques(int filas) {
+		blocks.clear();
+		int blockWidth = 70;
+	    int blockHeight = 26;
+	    int y = Gdx.graphics.getHeight(); // 480
+	    
+        for (int cont = 0; cont < filas; cont++ ) {
+	    	y -= blockHeight + 10; 
+	    	for (int x = 5; x < Gdx.graphics.getWidth(); x += blockWidth + 10) {
+	    		Block.BlockType tipo = getRandomBlockType();
+	    		blocks.add(new Block(x, y, blockWidth, blockHeight, tipo));
+	    	}
+	    }
+	}*/
+    public void crearBloques(int nivel) {
+    	
+    	LevelGenerator currentGenerator = generationStrategy.selectGenerator(nivel);
+    	
+    	currentGenerator.generadorNivel(nivel, this.blocks, 1200);
+    }
+
+	private Block.BlockType getRandomBlockType() {
+		double r = ThreadLocalRandom.current().nextDouble();
+		if (r < 0.45) return Block.BlockType.NORMAL;
+		if (r < 0.65) return Block.BlockType.FUERTE;
+		if (r < 0.80) return Block.BlockType.DURO;
+		if (r < 0.90) return Block.BlockType.DURISIMO;
+		return Block.BlockType.HIELO;
+	}
+
+    // --- ======================================================= ---
+    // --- MÉTODOS DE HABILIDADES E ITEMS (de 'main' y 'CP') ---
+    // --- ======================================================= ---
+>>>>>>> Stashed changes
 
     /**
      * Se llama UNA VEZ al completar un nivel.
@@ -282,12 +428,19 @@ public class BlockBreakerGame extends ApplicationAdapter {
 
         // Carga los bloques del siguiente nivel
         this.nivel++;
+<<<<<<< Updated upstream
         crearBloques(this.nivel);
     }
 
     /**
      * Dibuja el menú de habilidades (Se llama desde render).
      */
+=======
+        crearBloques(nivel);
+    }
+
+   
+>>>>>>> Stashed changes
     private void dibujarMenuHabilidades() {
         float centroX = Gdx.graphics.getWidth() / 2;
         float centroY = Gdx.graphics.getHeight() / 2;
@@ -349,10 +502,15 @@ public class BlockBreakerGame extends ApplicationAdapter {
         blocks.clear();
         crearBloques(nivel);
         
+<<<<<<< Updated upstream
         // Resetea el tamaño y velocidad del paddle (si los cambiaste)
         pad.reset(); // (Necesitarías añadir este método a Paddle)
         
         //resetea el escudo y lo pone en false
+=======
+        crearBloques(nivel); 
+        pad.reset(); 
+>>>>>>> Stashed changes
         escudoActivo = false;
         
         // Resetea la bola

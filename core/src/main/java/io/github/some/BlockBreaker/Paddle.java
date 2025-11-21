@@ -44,9 +44,16 @@ public class Paddle {
 		if(x < 0) x = 0;
 	}
 	public void moveRight() {
+<<<<<<< Updated upstream
 		x+= velocidad;
 		if(x + this.width >Gdx.graphics.getWidth()) {
 			x = Gdx.graphics.getWidth() - width;
+=======
+		x += velocidad;
+		// Asumiendo que el ancho de tu mundo es 800
+		if(x + this.width > 1200) { 
+			x = 1200 - width;
+>>>>>>> Stashed changes
 		}
 	}
     
