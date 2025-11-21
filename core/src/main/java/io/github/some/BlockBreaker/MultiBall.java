@@ -3,11 +3,13 @@ package io.github.some.BlockBreaker;
 import com.badlogic.gdx.graphics.Color;
 import java.util.ArrayList;
 
-public class MultiBall extends Item{
+public class MultiBall extends Item implements EstrategiaItem {
 	public MultiBall(float x, float y) {
-		super(x,y,20,20,Color.YELLOW, true);
+		super(x,y,20,20,Color.YELLOW, true,null);
+		this.estrategia=this;
 	}
-	public void applyEffect(BlockBreakerGame game) {
+	@Override
+	public void aplicar(BlockBreakerGame game) {
 		ArrayList<PingBall> balls=game.getBalls();
 		Paddle paddle=game.getPaddle();
 		
@@ -21,7 +23,5 @@ public class MultiBall extends Item{
 			PingBall nueva = new PingBall(baseX,baseY,10,xSpeed,5,false);  
 			balls.add(nueva);
 		}
-		desactivar();
 	}
 }
-

@@ -4,12 +4,13 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.utils.Timer;
 import java.util.ArrayList;
 
-public class GreatBall extends Item {
+public class GreatBall extends Item implements EstrategiaItem{
 	public GreatBall(float x, float y) {
-        super(x, y, 20, 20, Color.PURPLE, true);
+        super(x, y, 20, 20, Color.PURPLE, true, null);
+        this.estrategia = this;
     }
-	
-	public void applyEffect(BlockBreakerGame game) {
+	@Override
+	public void aplicar(BlockBreakerGame game) {
 		ArrayList<PingBall> balls=game.getBalls();
 		
 	    for(PingBall ball : balls) {
@@ -33,6 +34,5 @@ public class GreatBall extends Item {
 		    
 		   
 	    }
-	    desactivar();
 	}
 }

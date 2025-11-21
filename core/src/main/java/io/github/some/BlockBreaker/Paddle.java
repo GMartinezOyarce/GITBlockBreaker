@@ -75,8 +75,8 @@ public class Paddle {
 	public void moveRight() {
 		x += velocidad;
 		// Asumiendo que el ancho de tu mundo es 800
-		if(x + this.width > 800) { 
-			x = 800 - width;
+		if(x + this.width > 1200) { 
+			x = 1200 - width;
 		}
 	}
     

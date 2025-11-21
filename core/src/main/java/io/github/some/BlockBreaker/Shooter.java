@@ -4,12 +4,13 @@ import java.util.ArrayList;
 import com.badlogic.gdx.utils.Timer;
 import com.badlogic.gdx.graphics.Color;
 
-public class Shooter extends Item{
+public class Shooter extends Item implements EstrategiaItem {
 	public Shooter(float x, float y) {
-		super(x,y,20,20,Color.RED, true);
+		super(x,y,20,20,Color.RED, true,null);
+		this.estrategia=this;
 	}
-	
-	public void applyEffect(BlockBreakerGame game) {
+	@Override
+	public void aplicar(BlockBreakerGame game) {
 		final float DURACION = 20f; 
         final float INTERVALO = 1.0f;
         Paddle paddle=game.getPaddle();
@@ -36,6 +37,5 @@ public class Shooter extends Item{
        
         Timer.schedule(disparo, 0, INTERVALO);
 
-        desactivar();
 	}
 }

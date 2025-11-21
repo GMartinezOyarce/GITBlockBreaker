@@ -61,8 +61,8 @@ public class PingBall {
 	    y += ySpeed;
         
 	    // Límites del mundo (de 'main')
-	    int anchoMundo = 800;
-	    int techoMundo = 465; // Ajustado para estar sobre los bloques y bajo la UI
+	    int anchoMundo = 1200;
+	    int techoMundo = 800; // Ajustado para estar sobre los bloques y bajo la UI
 
 	    if (x-size < 0 || x+size > anchoMundo) { // Usa anchoMundo
 	        xSpeed = -xSpeed;

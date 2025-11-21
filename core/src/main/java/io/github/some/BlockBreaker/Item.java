@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.Color;
 import java.util.ArrayList;
 
 public abstract class Item {
+	protected EstrategiaItem estrategia;
 	private float x;
 	private float y;
 	private float ancho;
@@ -13,13 +14,14 @@ public abstract class Item {
 	private Color color;
 	private boolean activo;
 	
-	public Item(float x, float y, float ancho, float alto, Color color, boolean activo) {
+	public Item(float x, float y, float ancho, float alto, Color color, boolean activo, EstrategiaItem estrategia) {
 		this.x=x;
 		this.y=y;
 		this.ancho=ancho;
 		this.alto=alto;
 		this.color=color;
 		this.activo=activo;
+		this.estrategia=estrategia;
 	}
     public void bajar(float delta) {
         y -= 100 * delta; 
@@ -30,7 +32,10 @@ public abstract class Item {
         shape.rect(x, y, ancho, alto);
     }
 
-    public abstract void applyEffect(BlockBreakerGame game);
+    public void applyEffect(BlockBreakerGame game) {
+        estrategia.aplicar(game);
+        desactivar();
+    }
     
     public float getX() { return x; }
     public float getY() { return y; }
@@ -39,3 +44,4 @@ public abstract class Item {
     public boolean isActivo() { return activo; }
     public void desactivar() { activo = false; }
 }
+

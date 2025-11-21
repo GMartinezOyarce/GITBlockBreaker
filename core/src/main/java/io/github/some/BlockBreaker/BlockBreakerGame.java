@@ -14,6 +14,8 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.Timer; // Importado de CP
 
+import GeneracionNiveles.LevelGenerator;
+import GeneracionNiveles.LevelSelectionStrategy;
 // --- Imports de Habilidades (de 'main') ---
 import Habilidades.AgrandarPaddle;
 import Habilidades.Escudo;
@@ -65,12 +67,14 @@ public class BlockBreakerGame extends ApplicationAdapter {
     private int yEscudo = 5;
     private Habilidad habilidadEscudo;
     private Habilidad habilidadPaddlePegajoso;
+    
+    private LevelSelectionStrategy generationStrategy = new LevelSelectionStrategy();
 
     @Override
     public void create() {
         // --- Inicializar LibGDX (de 'main') ---
         camera = new OrthographicCamera();
-        camera.setToOrtho(false, 800, 480); // Usamos 800x480 de 'main'
+        camera.setToOrtho(false, 1200, 800); // Usamos 800x480 de 'main'
         batch = new SpriteBatch();
         font = new BitmapFont();
         font.getData().setScale(1.5f); // Usamos la escala de 'main'
@@ -101,7 +105,7 @@ public class BlockBreakerGame extends ApplicationAdapter {
         estadoActual = EstadoJuego.JUGANDO;
         
         // Carga los bloques (usando la lógica de 'main' que era más avanzada)
-        crearBloques(2 + nivel);
+        crearBloques(nivel);
     }
 
     @Override
@@ -158,8 +162,8 @@ public class BlockBreakerGame extends ApplicationAdapter {
         batch.setProjectionMatrix(camera.combined);
         batch.begin();
         
-        font.draw(batch, "Vidas: " + vidas, 10, 470);
-        font.draw(batch, "Puntaje: " + puntaje, Gdx.graphics.getWidth() - 150, 470);
+        font.draw(batch, "Vidas: " + vidas, Gdx.graphics.getWidth() - 150, Gdx.graphics.getHeight() - 10);
+        font.draw(batch, "Puntaje: " + puntaje, Gdx.graphics.getWidth() - 150, Gdx.graphics.getHeight() - 30);
 
         // Dibuja el menú de habilidades si es el estado
         if (estadoActual == EstadoJuego.SELECCIONANDO_HABILIDAD) {
@@ -313,7 +317,7 @@ public class BlockBreakerGame extends ApplicationAdapter {
     // --- MÉTODOS DE LÓGICA DE BLOQUES (de 'main'/'feature') ---
     // --- ======================================================= ---
     
-    public void crearBloques(int filas) {
+    /*public void crearBloques(int filas) {
 		blocks.clear();
 		int blockWidth = 70;
 	    int blockHeight = 26;
@@ -326,8 +330,13 @@ public class BlockBreakerGame extends ApplicationAdapter {
 	    		blocks.add(new Block(x, y, blockWidth, blockHeight, tipo));
 	    	}
 	    }
-	}
+	}*/
+    public void crearBloques(int filas) {
+    	LevelGenerator  currentGenerator = generationStrategy.selectGenerator(nivel);
+    	currentGenerator.generadorNivel(nivel, this.blocks, 1200);
+    }
 
+    
 	private Block.BlockType getRandomBlockType() {
 		double r = ThreadLocalRandom.current().nextDouble();
 		if (r < 0.45) return Block.BlockType.NORMAL;
@@ -367,7 +376,7 @@ public class BlockBreakerGame extends ApplicationAdapter {
         opcion3 = (poolFiltrado.size() > 2) ? poolFiltrado.get(2) : null;
 
         this.nivel++;
-        crearBloques(2 + nivel);
+        crearBloques(nivel);
     }
 
     private void dibujarMenuHabilidades() {
@@ -417,7 +426,7 @@ public class BlockBreakerGame extends ApplicationAdapter {
         balas.clear();
         Timer.instance().clear();
         
-        crearBloques(2 + nivel); 
+        crearBloques(nivel); 
         pad.reset(); 
         escudoActivo = false;
         
